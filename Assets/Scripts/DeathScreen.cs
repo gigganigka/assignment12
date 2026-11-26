@@ -22,6 +22,7 @@ public class DeathScreen : MonoBehaviour
     {
         if (panel != null) panel.SetActive(true);
         if (mobileControls != null) mobileControls.SetActive(false);
+        SoundPass.Ensure(); SoundPass.Instance.SetPaused(true);
         Time.timeScale = 0f;              // пауза: враги и шары замирают
     }
 
@@ -29,7 +30,8 @@ public class DeathScreen : MonoBehaviour
     public void Restart()
     {
         Time.timeScale = 1f;              // ВАЖНО вернуть, иначе следующая сцена будет на паузе
-        GameScenes.Load(SceneManager.GetActiveScene().name);
+        if(SceneManager.GetActiveScene().name==SceneNames.Campaign) RunFlow.Restart();
+        else GameScenes.Load(SceneManager.GetActiveScene().name);
     }
 
     // Кнопка MAIN MENU

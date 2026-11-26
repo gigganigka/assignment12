@@ -4,9 +4,9 @@ public sealed class ShooterBrain : EnemyBrain2D
 {
     public enum State { Idle, Aim, Shoot, Cooldown }
     [SerializeField] State state;
-    [SerializeField, Min(0.1f)] float bulletSpeed = 5f;
-    [SerializeField, Min(0.1f)] float bulletLifetime = 2.5f;
-    [SerializeField] Vector2 muzzleOffset = new Vector2(0.5f, 0.05f);
+    [SerializeField, Min(0.1f)] float bulletSpeed;
+    [SerializeField, Min(0.1f)] float bulletLifetime;
+    [SerializeField] Vector2 muzzleOffset;
     [SerializeField] Sprite projectileSprite;
     Vector2 aim;
     public override string StateName => state.ToString();
@@ -17,8 +17,13 @@ public sealed class ShooterBrain : EnemyBrain2D
         if (tuning == null) return;
         bulletSpeed = tuning.bulletSpeed;
         bulletLifetime = tuning.bulletLifetime;
+        muzzleOffset=tuning.muzzleOffset;
     }
-    void Enter(State next) { state = next; enteredAt = Time.time; moveIntent = 0; }
+    void Enter(State next)
+    {
+        state = next; enteredAt = Time.time; moveIntent = 0;
+        if (next == State.Aim) Sfx.Play(SoundEvent.ShooterWindUp);
+    }
     protected override void TickState()
     {
         switch (state)
@@ -40,7 +45,7 @@ public sealed class ShooterBrain : EnemyBrain2D
                 {
                     Vector2 origin = (Vector2)transform.position + new Vector2(muzzleOffset.x * facing, muzzleOffset.y);
                     EnemyShot2D.Spawn(this, origin, aim, bulletSpeed, bulletLifetime, damage, projectileSprite);
-                    Sfx.Play(Resources.Load<AudioClip>("GameAudio/jump"), 0.35f);
+                    Sfx.Play(SoundEvent.EnemyShot);
                 }
                 Enter(State.Cooldown);
                 break;

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "game": "COINBOUND",
+  "bestScore": 1500,
+  "runScore": 1500,
+  "levelEntryScore": 1500,
+  "unlocked": [
+    1,
+    2
+  ],
+  "completed": [
+    1
+  ],
+  "currentLevel": 2,
+  "currentHp": 1,
+  "levelEntryHp": 1,
+  "runActive": true,
+  "hasCheckpoint": false,
+  "playerX": 0,
+  "playerY": 0,
+  "timeLeft": 0,
+  "collectedCoins": [],
+  "collectedHearts": [],
+  "enemyHp": [],
+  "musicVolume": 0.18,
+  "soundVolume": 0.75,
+  "fireCooldown": 0,
+  "healthSetting": 0,
+  "hazardsEnabled": true,
+  "enemiesEnabled": true,
+  "playerVelocityY": 0,
+  "enemyX": [],
+  "enemyY": []
+}

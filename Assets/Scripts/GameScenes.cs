@@ -4,8 +4,10 @@ using UnityEngine.SceneManagement;
 
 public static class GameScenes
 {
-    public static bool Load(string scene)
+    public static bool Load(string scene, bool saveProgress = true)
     {
+        if (saveProgress && Application.isPlaying) RunFlow.SaveCurrent();
+        LegacyHealthCarry.BeforeLoad(scene);
         Time.timeScale = 1f;
         AudioListener.pause = false;
         try

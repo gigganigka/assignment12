@@ -4,9 +4,9 @@ public sealed class ChargerBrain : EnemyBrain2D
 {
     public enum State { Patrol, WindUp, Charge, Recover }
     [SerializeField] State state;
-    [SerializeField, Min(0.1f)] float chargeSpeed = 6f;
-    [SerializeField, Min(0.1f)] float chargeDuration = 0.6f;
-    [SerializeField, Min(0.05f)] float wallProbe = 0.6f;
+    [SerializeField, Min(0.1f)] float chargeSpeed;
+    [SerializeField, Min(0.1f)] float chargeDuration;
+    [SerializeField, Min(0.05f)] float wallProbe;
     bool dealtDamage;
     public override string StateName => state.ToString();
     protected override bool Telegraphing => state == State.WindUp;
@@ -16,8 +16,13 @@ public sealed class ChargerBrain : EnemyBrain2D
         if (tuning == null) return;
         chargeSpeed = tuning.chargeSpeed;
         chargeDuration = tuning.chargeDuration;
+        wallProbe=tuning.wallProbe;
     }
-    void Enter(State next) { state = next; enteredAt = Time.time; moveIntent = 0; }
+    void Enter(State next)
+    {
+        state = next; enteredAt = Time.time; moveIntent = 0;
+        if (next == State.WindUp) Sfx.Play(SoundEvent.ChargerWindUp);
+    }
     protected override void TickState()
     {
         switch (state)
@@ -28,7 +33,7 @@ public sealed class ChargerBrain : EnemyBrain2D
                 break;
             case State.WindUp:
                 if (!AttackVisible) { Enter(State.Recover); break; }
-                if (StateAge >= windUp) { dealtDamage = false; Enter(State.Charge); }
+                if (StateAge >= windUp) { dealtDamage = false; Sfx.Play(SoundEvent.EnemyStrike); Enter(State.Charge); }
                 break;
             case State.Charge:
                 if (!AttackVisible || StateAge >= chargeDuration ||

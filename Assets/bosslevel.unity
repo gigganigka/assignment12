@@ -5250,7 +5250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 4
-  jumpForce: 9
+  jumpForce: 12.5
   groundCheck: {fileID: 289094203}
   groundRadius: 0.1
   groundLayer:
@@ -9713,6 +9713,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1151018808}
   - component: {fileID: 1151018809}
+  - component: {fileID: 4300000000}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -15870,6 +15871,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1759606654}
   - component: {fileID: 1759606655}
+  - component: {fileID: 4300000001}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -18855,6 +18857,30 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
+--- !u!114 &4300000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1151018807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5370b6f36639405c91d49a56dfbb0900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+--- !u!114 &4300000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1759606653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5370b6f36639405c91d49a56dfbb0900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

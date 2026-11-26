@@ -3,7 +3,7 @@ using UnityEngine;
 // Огненный шар босса: бьёт игрока, исчезает об землю. Крутится в полёте.
 public class Fireball : Projectile
 {
-    public int damage = 1;
+    public int damage;
     public float spinSpeed = 360f;   // градусов в секунду - просто для красоты
 
     protected override void Update()

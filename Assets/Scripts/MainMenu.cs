@@ -47,7 +47,7 @@ public class MainMenu : MonoBehaviour
         if (enemiesToggle != null) GameSettings.enemiesEnabled = enemiesToggle.isOn;
 
         Time.timeScale = 1f;   // если пришли с экрана смерти, где была пауза
-        GameScenes.Load(firstLevelName);
+        RunFlow.Continue();
     }
 
     // Кнопка Quit

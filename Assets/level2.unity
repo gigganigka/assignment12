@@ -730,6 +730,7 @@ GameObject:
   m_Component:
   - component: {fileID: 58110704}
   - component: {fileID: 58110705}
+  - component: {fileID: 4300000000}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -13219,6 +13220,7 @@ GameObject:
   m_Component:
   - component: {fileID: 976875788}
   - component: {fileID: 976875789}
+  - component: {fileID: 4300000001}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -13300,6 +13302,7 @@ GameObject:
   m_Component:
   - component: {fileID: 982780152}
   - component: {fileID: 982780153}
+  - component: {fileID: 4300000002}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -19467,6 +19470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1450852861}
   - component: {fileID: 1450852862}
+  - component: {fileID: 4300000003}
   m_Layer: 6
   m_Name: Platform
   m_TagString: Untagged
@@ -22600,7 +22604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 4
-  jumpForce: 9
+  jumpForce: 12.5
   groundCheck: {fileID: 729047271}
   groundRadius: 0.1
   groundLayer:
@@ -28904,6 +28908,108 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 7.2000003, y: 1.8000001}
   m_EdgeRadius: 0
+--- !u!1 &4200000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4200000002}
+  - component: {fileID: 4200000003}
+  m_Layer: 0
+  m_Name: CampaignEnemies
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4200000002
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4200000001}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4200000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4200000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a48eee6cc852483bac4109e599298ea3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::CampaignEnemies
+  spawns:
+  - kind: 0
+    position: {x: 10, y: 0.55}
+    patrolRadius: 0.5
+  - kind: 1
+    position: {x: 20.9, y: 0.55}
+    patrolRadius: 0
+  - kind: 2
+    position: {x: 43.3, y: 0.55}
+    patrolRadius: 1.8
+--- !u!114 &4300000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58110703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5370b6f36639405c91d49a56dfbb0900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+--- !u!114 &4300000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976875787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5370b6f36639405c91d49a56dfbb0900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+--- !u!114 &4300000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982780151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5370b6f36639405c91d49a56dfbb0900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
+--- !u!114 &4300000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450852860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5370b6f36639405c91d49a56dfbb0900, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::OneWayPlatform
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -28936,3 +29042,4 @@ SceneRoots:
   - {fileID: 896090512}
   - {fileID: 1901355248}
   - {fileID: 220322699}
+  - {fileID: 4200000002}

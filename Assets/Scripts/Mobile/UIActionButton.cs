@@ -18,14 +18,15 @@ public sealed class UIActionButton : MonoBehaviour
     }
     public void Execute()
     {
+        Sfx.Play(SoundEvent.UIClick);
         MobileGameUI ui = MobileGameUI.Instance;
         switch (command)
         {
             case Command.Play:
                 MainMenu menu = Object.FindFirstObjectByType<MainMenu>();
-                if (menu != null) menu.Play(); else GameScenes.Load(SceneNames.Level1);
+                if (menu != null) menu.Play(); else RunFlow.Continue();
                 break;
-            case Command.Replay: GameScenes.Load(SceneNames.EnemyLab); break;
+            case Command.Replay: RunFlow.NewGame(); break;
             case Command.Menu: GameScenes.Load(SceneNames.MainMenu); break;
             case Command.Restart: if (ui != null) ui.Restart(); break;
             case Command.Pause: if (ui != null) ui.SetPaused(true); break;

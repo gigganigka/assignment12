@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec16eef326c4a048953ec249d21d4e7, type: 3}
+  m_Name: Level_02
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  id: 2
+  title: CRYSTAL CROSSING
+  playerStart: {x: 1.2, y: 1.0}
+  exit: {x: 46.8, y: 0.8}
+  timeLimit: 180
+  fallY: -5
+  coinsRequired: 5
+  defeatAllEnemies: 0
+  surfaces:
+    - center: {x: 32.100002, y: 1.8000001}
+      size: {x: 1.8000001, y: 0.6}
+      oneWay: 1
+    - center: {x: 12.3, y: -0.90000004}
+      size: {x: 6.6000004, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 29.7, y: 0.90000004}
+      size: {x: 1.8000001, y: 0.6}
+      oneWay: 1
+    - center: {x: 11.700001, y: 0.90000004}
+      size: {x: 1.8000001, y: 0.6}
+      oneWay: 1
+    - center: {x: 42.300003, y: -0.90000004}
+      size: {x: 11.400001, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 30.600002, y: -0.90000004}
+      size: {x: 8.400001, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 19.5, y: 1.2}
+      size: {x: 1.8000001, y: 0.6}
+      oneWay: 1
+    - center: {x: 19.5, y: -0.90000004}
+      size: {x: 4.2000003, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 3.6000001, y: -0.90000004}
+      size: {x: 7.2000003, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 24.0, y: 0.6}
+      size: {x: 1.8, y: 0.6}
+      oneWay: 1
+  enemies:
+    - kind: 0
+      position: {x: 10.0, y: 0.55}
+      patrolRadius: 0.5
+      stats: {fileID: 11400000, guid: 65f8191e467747c38d0b21bedff8d8d7, type: 2}
+    - kind: 1
+      position: {x: 20.9, y: 0.55}
+      patrolRadius: 0
+      stats: {fileID: 11400000, guid: be81d307635e49afb127f4437ad52579, type: 2}
+    - kind: 2
+      position: {x: 43.3, y: 0.55}
+      patrolRadius: 1.8
+      stats: {fileID: 11400000, guid: 050e549026f944fca893ac944942abf0, type: 2}
+  coins:
+    - {x: 3.6000001, y: 0.78000003}
+    - {x: 29.7, y: 2.0400002}
+    - {x: 32.100002, y: 3.0}
+    - {x: 11.700001, y: 2.0400002}
+    - {x: 24.0, y: 1.5}
+  hearts:
+    - {x: 27.900002, y: 0.45}
+  hazards:
+    - {x: 13.500001, y: 0.16666667}
+    - {x: 39.9, y: 0.16666667}
+    - {x: 32.7, y: 0.16666667}
+  hazardSize: {x: 1.2, y: 0.3}
+  hasBoss: 0
+  bossPosition: {x: 28.0, y: 1.5}
+  bossSize: {x: 2.4, y: 3.0}
+  checkpointMin: {x: -2.00000005, y: -5}
+  checkpointMax: {x: 50.0000035, y: 9.100000099999999}

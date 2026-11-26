@@ -24,6 +24,6 @@ public static class GameAudio
         Camera camera = Camera.main;
         if (camera != null && Object.FindFirstObjectByType<AudioListener>() == null)
             camera.gameObject.AddComponent<AudioListener>();
-        if (Music.Instance == null) new GameObject("BackgroundMusic").AddComponent<Music>();
+        SoundPass.Ensure();
     }
 }

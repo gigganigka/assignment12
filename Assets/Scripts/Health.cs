@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 // Здоровье героя. Висит на Player.
 public class Health : MonoBehaviour
 {
-    public int maxHp = 3;                 // по заданию HP героя = 3
+    public int maxHp;                 // по заданию HP героя = 3
     public bool useMenuSettings = true;   // true: берём HP из настроек меню
-    public float invincibleTime = 1.5f;   // сколько секунд неуязвим после удара
-    public float blinkInterval = 0.1f;    // как часто мигает
+    public float invincibleTime;   // сколько секунд неуязвим после удара
+    public float blinkInterval;    // как часто мигает
     public AudioClip damageSound;
 
     public int CurrentHp { get; private set; }
@@ -21,23 +21,29 @@ public class Health : MonoBehaviour
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        if (useMenuSettings) maxHp = GameSettings.playerMaxHp;
-        CurrentHp = maxHp;
+        PlayerStats stats=GameCatalog.Current.player;
+        maxHp=GameSettings.playerMaxHp;
+        invincibleTime=stats.invincibility; blinkInterval=stats.blinkInterval;
+        CurrentHp=gameObject.scene.name==SceneNames.Campaign && SaveService.Data.runActive
+            ? Mathf.Clamp(SaveService.Data.currentHp,0,maxHp)
+            : LegacyHealthCarry.InitialHp(gameObject.scene.name,maxHp);
     }
 
     public void TakeDamage(int amount)
     {
-        if (dead || IsInvincible) return;   // пока неуязвим - урон не проходит
-        CurrentHp -= amount;
-        Sfx.Play(damageSound != null ? damageSound : GameAudio.Clip("hurt"), 0.75f);
+        if (dead || IsInvincible || amount<=0) return;   // пока неуязвим - урон не проходит
+        CurrentHp = Mathf.Max(0,CurrentHp-amount);
+        RememberHealth();
+        Sfx.Play(SoundEvent.Hit);
         if (CurrentHp <= 0) { Die(); return; }
         StartCoroutine(InvincibilityRoutine());
     }
 
     public void Heal(int amount)
     {
-        if (dead) return;
+        if (dead || amount<=0) return;
         CurrentHp = Mathf.Min(maxHp, CurrentHp + amount); // не больше максимума
+        RememberHealth();
     }
 
     // Смерть (HP = 0 или падение в яму)
@@ -45,7 +51,10 @@ public class Health : MonoBehaviour
     {
         if (dead) return;
         dead = true;
+        SoundPass.Ensure(); SoundPass.Instance.PlayerDied();
         CurrentHp = 0;
+        RememberHealth();
+        if(gameObject.scene.name==SceneNames.Campaign) SaveService.Write();
 
         StopAllCoroutines();              // останавливаем мигание
         sr.enabled = true;
@@ -59,9 +68,19 @@ public class Health : MonoBehaviour
         else if (DeathScreen.Instance != null)
             DeathScreen.Instance.Show();  // показываем экран смерти (Restart / Main Menu)
         else
-            GameScenes.Load(SceneManager.GetActiveScene().name); // запасной вариант: перезапуск уровня
+            RestartFallback(); // запасной вариант: перезапуск уровня
     }
 
+    void RememberHealth()
+    {
+        if(gameObject.scene.name==SceneNames.Campaign && SaveService.Data.runActive)
+            SaveService.Data.currentHp=CurrentHp;
+    }
+    void RestartFallback()
+    {
+        if(gameObject.scene.name==SceneNames.Campaign) RunFlow.Restart();
+        else GameScenes.Load(SceneManager.GetActiveScene().name);
+    }
     // Корутина: код, который "растянут" во времени (yield return = подождать)
     IEnumerator InvincibilityRoutine()
     {

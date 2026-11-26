@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 200f222bea7b408d958db6c68a652c22, type: 3}
+  m_Name: AppDefaults
+  m_EditorClassIdentifier: Assembly-CSharp::AppDefaults
+  musicVolume: 0.18
+  soundVolume: 0.75
+  hazardsEnabled: 1
+  enemiesEnabled: 1
+  minHp: 1
+  maxHp: 5
+  minFireCooldown: 0.1
+  maxFireCooldown: 1.5
+  cooldownStep: 0.1
+  volumeStep: 0.1
+  jumpVolume: 0.75
+  hurtVolume: 0.75
+  coinVolume: 0.75
+  enemyHitVolume: 0.4
+  enemyShotVolume: 0.35

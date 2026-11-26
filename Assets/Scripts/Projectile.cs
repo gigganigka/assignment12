@@ -5,10 +5,23 @@ using UnityEngine;
 // Префаб снаряда: SpriteRenderer + Collider2D (Is Trigger) + Rigidbody2D (Kinematic) + скрипт.
 public abstract class Projectile : MonoBehaviour
 {
-    public float speed = 8f;
-    public float lifeTime = 3f;
+    public float speed;
+    public float lifeTime;
     protected Vector2 direction = Vector2.right;
 
+    protected virtual void Awake()
+    {
+        if(this is PlayerBullet)
+        {
+            PlayerStats p=GameCatalog.Current.player; speed=p.bulletSpeed; lifeTime=p.bulletLifetime;
+            ((PlayerBullet)this).damage=p.bulletDamage;
+        }
+        else
+        {
+            BossStats b=GameCatalog.Current.boss; speed=b.bulletSpeed; lifeTime=b.bulletLifetime;
+            if(this is Fireball) ((Fireball)this).damage=b.bulletDamage;
+        }
+    }
     public void Launch(Vector2 dir)
     {
         direction = dir.normalized;

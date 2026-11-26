@@ -19,7 +19,7 @@ public static class Assignment10Tools
         foreach (string name in new[] { "Patroller", "Shooter", "Charger" })
         {
             EnemyTuning t = AssetDatabase.LoadAssetAtPath<EnemyTuning>("Assets/Resources/EnemyLab/" + name + "Settings.asset");
-            if (t == null || t.windUp < 0.3f || t.windUp > 0.8f || t.cooldown <= 0 || t.hitPoints < 1)
+            if (t == null || t.windUp < 0.3f || t.windUp > 0.8f || t.cooldown <= 0 || t.hitPoints < 1 || t.chaseRange < t.visionRange)
                 throw new Exception("Invalid tuning asset: " + name);
         }
         if (Application.isPlaying)
@@ -27,10 +27,12 @@ public static class Assignment10Tools
             if (UnityEngine.Object.FindFirstObjectByType<PatrollerBrain>() == null ||
                 UnityEngine.Object.FindFirstObjectByType<ShooterBrain>() == null ||
                 UnityEngine.Object.FindFirstObjectByType<ChargerBrain>() == null)
-                throw new Exception("Run enemy_lab with all three enemies alive before checking.");
+                throw new Exception("Run level1, level2 or enemy_lab with all three enemies alive and Enemies ON before checking.");
             EnemyLabBootstrap lab = UnityEngine.Object.FindFirstObjectByType<EnemyLabBootstrap>();
-            if (lab == null || lab.Enemies == null || lab.Enemies.Length != 3)
-                throw new Exception("Missing encounter bootstrap.");
+            CampaignEnemies campaign = UnityEngine.Object.FindFirstObjectByType<CampaignEnemies>();
+            bool validLab = lab != null && lab.Enemies != null && lab.Enemies.Length == 3;
+            bool validCampaign = campaign != null && campaign.Enemies != null && campaign.Enemies.Length == 3;
+            if (!validLab && !validCampaign) throw new Exception("Missing encounter bootstrap.");
         }
         Debug.Log("Assignment 10 asset checks passed. Phone playtests and behaviour verification are still required.");
     }

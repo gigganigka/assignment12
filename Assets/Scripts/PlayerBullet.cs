@@ -3,7 +3,7 @@ using UnityEngine;
 // Пуля героя: бьёт всё, что реализует IDamageable (враги, босс).
 public class PlayerBullet : Projectile
 {
-    public int damage = 1;
+    public int damage;
 
     protected override void OnHit(Collider2D other)
     {

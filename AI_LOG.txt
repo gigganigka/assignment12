@@ -26,4 +26,31 @@ November 5, 2026: Utilized the GitHub connector to import assets and project set
 
 2026-11-12 Assignment 10: Codex implemented separate enemy state machines, perception,
 waypoint motion, telegraphed attacks, enemy shots, tuning assets, encounter scene,
-script map and empty playtest templates
+script map and empty playtest templates. Assignment 10 explicitly permits agents.
+Unity compilation, device tests, two-person playtests and tuning outcomes are not claimed.
+
+2026-11-12 follow-up: Codex integrated the three enemy types into original level1/level2,
+shared spawning and sprite animation, corrected chase retention/facing/last-known position,
+and checked authored placements and source syntax offline. Prepared as a separate task
+repository package at the user's request. Unity/device execution remains unverified.
+
+2026-11-12 jump fix: Codex changed the player's serialized jump velocity from 9 to 12.5
+in all gameplay scenes and matched the script default. Added OneWayPlatform only to
+floating platforms and prevented rising overlaps from counting as grounded.
+Ran offline syntax/resource/placement checks and a free-flight numerical estimate;
+Unity gameplay and actual iPhone tests were not performed. Prepared in a separate
+local repository at the user's request; no existing GitHub repository was modified.
+
+2026-11-19 Assignment 11: at the user's explicit selection of the full assignment,
+Codex implemented player/item/enemy/boss/default ScriptableObject data, three LevelData
+assets and a shared campaign builder, JSON save validation/guarded replacement,
+checkpoint and HP carry, save lifecycle hooks, level select, settings persistence
+and reset confirmation. Added source/reference/geometry and Web sync-queue checks,
+Unity editor self-checks and hand-in guides. Unity/device execution and the student's
+required recordings were not performed or invented.
+
+2026-11-19 keyboard follow-up: user reported keyboard movement did not work.
+Codex added direct Input System keyboard/gamepad polling while retaining touch
+controls, removed duplicate physical-action callbacks, normalized a legacy vector
+composite and added a Unity editor input diagnostic. Offline source/data checks
+passed; actual Unity keyboard input was not executed here.

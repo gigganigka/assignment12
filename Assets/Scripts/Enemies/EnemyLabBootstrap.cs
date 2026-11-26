@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -9,15 +10,15 @@ using UnityEngine.SceneManagement;
 [DefaultExecutionOrder(-1000)]
 public sealed class EnemyLabBootstrap : MonoBehaviour
 {
-    [SerializeField] Vector2 playerStart = new Vector2(-11, 1.2f);
-    [SerializeField] Vector2 floorCenter = new Vector2(8, -0.5f);
-    [SerializeField] Vector2 floorSize = new Vector2(48, 1);
-    [SerializeField] Vector2[] enemyPositions = { new Vector2(-2, 0.7f), new Vector2(10, 0.7f), new Vector2(21, 0.7f) };
-    [SerializeField] float patrolRadius = 2f;
-    [SerializeField] Vector2[] covers = { new Vector2(5, 0.6f), new Vector2(15, 0.6f) };
-    [SerializeField] Vector2 coverSize = new Vector2(0.8f, 1.2f);
-    [SerializeField] float exitX = 29f;
-    [SerializeField] float fallY = -5f;
+    [SerializeField] Vector2 playerStart;
+    [SerializeField] Vector2 floorCenter;
+    [SerializeField] Vector2 floorSize;
+    [SerializeField] Vector2[] enemyPositions;
+    [SerializeField] float patrolRadius;
+    [SerializeField] Vector2[] covers;
+    [SerializeField] Vector2 coverSize;
+    [SerializeField] float exitX;
+    [SerializeField] float fallY;
     [SerializeField] bool debugStateLabels = true;
     public EnemyBrain2D[] Enemies { get; private set; }
     public float ExitX => exitX;
@@ -29,6 +30,15 @@ public sealed class EnemyLabBootstrap : MonoBehaviour
 
     void Awake()
     {
+        LevelData data=GameCatalog.Current.levels[0];
+        playerStart=data.playerStart; enemyPositions=data.enemies.Select(x=>x.position).ToArray();
+        patrolRadius=data.enemies[0].patrolRadius; exitX=data.exit.x; fallY=data.fallY;
+        float left=data.surfaces.Min(x=>x.center.x-x.size.x/2);
+        float right=data.surfaces.Max(x=>x.center.x+x.size.x/2);
+        LevelData.Surface floor=data.surfaces.First(x=>!x.oneWay);
+        floorCenter=new Vector2((left+right)/2,floor.center.y); floorSize=new Vector2(right-left,floor.size.y);
+        covers=data.surfaces.Where(x=>x.oneWay).Select(x=>x.center).ToArray();
+        coverSize=data.surfaces.First(x=>x.oneWay).size;
         hero = FindFirstObjectByType<PlayerController>();
         if (hero == null) { Debug.LogError("Enemy Lab requires the original Player."); enabled = false; return; }
         health = hero.GetComponent<Health>();
@@ -76,47 +86,17 @@ public sealed class EnemyLabBootstrap : MonoBehaviour
     }
     T Create<T>(string title, Vector2 position, string spritePath) where T : EnemyBrain2D
     {
-        GameObject go = new GameObject(title);
-        go.SetActive(false);
-        go.transform.SetParent(transform);
-        go.transform.position = position;
-        go.layer = 7;
-        SpriteRenderer renderer = go.AddComponent<SpriteRenderer>();
-        renderer.sprite = MobileSprites.Load(spritePath);
-        renderer.sortingOrder = 5;
-        // Keep artwork bright, sharing the existing world material if available.
-        Shader shader = Shader.Find("Universal Render Pipeline/2D/Sprite-Unlit-Default");
-        if (shader != null)
-        {
-            Material material = new Material(shader);
-            renderer.sharedMaterial = material;
-            go.AddComponent<EnemyLabMaterial>().owned = material;
-        }
-        if (renderer.sprite != null)
-            go.transform.localScale = Vector3.one * (1f / Mathf.Max(renderer.sprite.bounds.size.y, 0.01f));
-        BoxCollider2D box = go.AddComponent<BoxCollider2D>();
-        Vector3 scale = go.transform.localScale;
-        box.size = new Vector2(0.65f / scale.x, 0.9f / scale.y);
-        Rigidbody2D body = go.AddComponent<Rigidbody2D>();
-        body.gravityScale = 3;
-        body.freezeRotation = true;
-        body.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        T brain = go.AddComponent<T>();
-        Transform[] points = new Transform[2];
-        for (int i = 0; i < 2; i++)
-        {
-            points[i] = new GameObject(title + " waypoint " + i).transform;
-            points[i].SetParent(transform);
-            points[i].position = position + Vector2.right * patrolRadius * (i == 0 ? -1 : 1);
-        }
-        brain.SetWaypoints(points);
-        brain.tuning = Resources.Load<EnemyTuning>(spritePath + "Settings");
+        EnemySpawner2D.Kind kind = typeof(T) == typeof(ShooterBrain) ? EnemySpawner2D.Kind.Shooter :
+            typeof(T) == typeof(ChargerBrain) ? EnemySpawner2D.Kind.Charger : EnemySpawner2D.Kind.Patroller;
+        T brain = (T)EnemySpawner2D.Spawn(kind, position, patrolRadius, transform);
+        GameObject go = brain.gameObject;
+        go.name = title;
         if (debugStateLabels)
         {
             TMP_Text label = WorldLabel(title + " state", position + Vector2.up * 1.2f, title);
             label.transform.SetParent(go.transform, true);
+            brain.SetStateLabel(label);
         }
-        go.SetActive(true);
         return brain;
     }
     void MakeBlock(string name, Vector2 position, Vector2 size, Color color)

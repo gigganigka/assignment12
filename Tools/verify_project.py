@@ -57,8 +57,28 @@ try:
     import tree_sitter_c_sharp
     parser=Parser(Language(tree_sitter_c_sharp.language()))
     scripts=list(assets.rglob('*.cs'))
-    bad=[str(p.relative_to(root)) for p in scripts if parser.parse(p.read_bytes()).root_node.has_error]
-    check(not bad, 'C# syntax parsed without errors in '+str(len(scripts))+' files: '+str(bad))
+    def preprocess(source, symbols):
+        enabled=True; stack=[]; output=[]
+        def condition(expr):
+            expr=re.sub(r'\b[A-Za-z_]\w*\b',lambda m: str(m[0] in symbols),expr)
+            expr=expr.replace('&&',' and ').replace('||',' or ').replace('!',' not ')
+            return bool(eval(expr, {'__builtins__':{}}, {}))
+        for line in source.splitlines():
+            directive=line.strip()
+            if directive.startswith('#if '):
+                branch=condition(directive[4:]); stack.append((enabled,branch)); enabled=enabled and branch
+            elif directive=='#else':
+                parent,taken=stack[-1]; enabled=parent and not taken
+            elif directive=='#endif':
+                enabled=stack.pop()[0]
+            elif enabled: output.append(line)
+        assert not stack, 'Unclosed preprocessor condition'
+        return '\n'.join(output).encode()
+    for platform,symbols in {'Editor':{'UNITY_EDITOR','UNITY_STANDALONE_WIN'},
+                             'Windows':{'UNITY_STANDALONE_WIN'},'Web':{'UNITY_WEBGL'},'iOS':{'UNITY_IOS'}}.items():
+        bad=[str(p.relative_to(root)) for p in scripts if parser.parse(preprocess(p.read_text(),symbols)).root_node.has_error]
+        check(not bad, platform+': C# syntax parsed without errors in '+str(len(scripts))+' files: '+str(bad))
+
 except ImportError:
     print('SKIP C# syntax parser: install tree-sitter and tree-sitter-c-sharp to enable it.')
 print('\n'.join('PASS '+x for x in checks))

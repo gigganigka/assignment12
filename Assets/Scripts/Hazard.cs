@@ -4,11 +4,12 @@ using UnityEngine;
 // От него наследуются PatrolEnemy и Boss (это и есть "наследование" из задания).
 public class Hazard : MonoBehaviour
 {
-    public int damage = 1;
+    public int damage;
     public bool respectHazardToggle = true; // выключаться, если в меню снят переключатель Fire
 
     protected virtual void Awake()
     {
+        damage=GameCatalog.Current.items.hazardDamage;
         if (respectHazardToggle && !GameSettings.hazardsEnabled)
             gameObject.SetActive(false);
     }

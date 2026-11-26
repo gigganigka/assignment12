@@ -18,7 +18,9 @@ public class Portal : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         if (LevelManager.Instance != null && !LevelManager.Instance.PortalOpen) return; // ещё закрыт
-        Sfx.Play(winSound);
+        Health health=other.GetComponent<Health>();
+        if(health==null || health.CurrentHp<=0) return;
+        if (nextScene != SceneNames.Win) Sfx.Play(SoundEvent.LevelClear);
         GameScenes.Load(nextScene);
     }
 }

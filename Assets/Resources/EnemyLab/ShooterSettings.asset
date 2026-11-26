@@ -21,7 +21,8 @@ MonoBehaviour:
   damage: 1
   attackRange: 1.1
   chaseSpeed: 2.3
-  sightMemory: 0.8
+  sightMemory: 1.5
+  chaseRange: 10
   bulletSpeed: 5
   bulletLifetime: 2.5
   chargeSpeed: 6

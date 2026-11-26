@@ -11,7 +11,7 @@ using UnityEngine.UI;
 // One consistent interface for all five original scenes. It is built in sceneLoaded,
 // before the original Start methods, so menu and HUD references are wired in time.
 // Tools > Mobile Game > Bake UI also creates an editable preview in each scene.
-public sealed class MobileGameUI : MonoBehaviour
+public sealed partial class MobileGameUI : MonoBehaviour
 {
     public static MobileGameUI Instance { get; private set; }
     public const string GameTitle = "COINBOUND";
@@ -58,7 +58,7 @@ public sealed class MobileGameUI : MonoBehaviour
     }
     public static bool IsGameScene(string name)
     {
-        return name == SceneNames.EnemyLab || name == SceneNames.MainMenu || name == SceneNames.Level1 ||
+        return name == SceneNames.Campaign || name == SceneNames.EnemyLab || name == SceneNames.MainMenu || name == SceneNames.Level1 ||
                name == SceneNames.Level2 || name == SceneNames.Boss || name == SceneNames.Win;
     }
     public static MobileGameUI Install(Scene scene)
@@ -116,7 +116,15 @@ public sealed class MobileGameUI : MonoBehaviour
         safe.gameObject.AddComponent<SafeAreaPanel>().Apply();
         if (sceneName == SceneNames.MainMenu) BuildMenu();
         else if (sceneName == SceneNames.Win) BuildWin();
-        else BuildLevel(sceneName, canvas);
+        else
+        {
+            BuildLevel(sceneName, canvas);
+            if(sceneName==SceneNames.Campaign)
+            {
+                campaignStatus=Label("RunStatus",hud.transform,"",36,Vector2.zero,new Vector2(1050,60));
+                Place(campaignStatus.rectTransform,new Vector2(0.5f,1),new Vector2(0,-190),new Vector2(1050,60));
+            }
+        }
         ready = true;
     }
     static void ConfigureEventSystem()
@@ -153,55 +161,8 @@ public sealed class MobileGameUI : MonoBehaviour
         Image shade = Box("BackgroundShade", canvas, new Color(0.02f, 0.12f, 0.14f, 0.25f));
         Stretch(shade.rectTransform);
     }
-    void BuildMenu()
-    {
-        MainMenu menu = FindFirstObjectByType<MainMenu>();
-        if (menu == null) menu = new GameObject("MenuManager").AddComponent<MainMenu>();
-        // The dedicated settings page writes GameSettings directly.
-        menu.hpSlider = menu.cooldownSlider = null;
-        menu.hazardsToggle = menu.enemiesToggle = null;
-        menu.hpText = menu.cooldownText = null;
-        menu.firstLevelName = SceneNames.EnemyLab;
-        Image card = Box("MenuCard", safe, Ink);
-        menuCard = card.gameObject;
-        Place(card.rectTransform, Center, Vector2.zero, new Vector2(1120, 860));
-        Transform root = card.transform;
-        Label("Eyebrow", root, "SMALL HERO. BIG ADVENTURE.", 36, new Vector2(0, 340), new Vector2(1000, 60)).color = Mint;
-        Label("Title", root, GameTitle, 100, new Vector2(0, 230), new Vector2(1000, 140)).color = Gold;
-        Label("Pitch", root, "Collect coins. Find the portal.", 36, new Vector2(0, 130), new Vector2(1000, 65));
-        Image portrait = Box("ExplorerPortrait", root, Color.white);
-        portrait.sprite = MobileSprites.Load("Mobile/ExplorerIdle");
-        portrait.preserveAspect = true;
-        Place(portrait.rectTransform, Center, new Vector2(-330, -65), new Vector2(220, 220));
-        Label("ExplorerName", root, "NOVA", 42, new Vector2(-330, -220), new Vector2(300, 70)).color = Gold;
-        ButtonFor(root, "PLAY", new Vector2(190, 10), new Vector2(540, 140), Mint, menu.Play);
-        ButtonFor(root, "SETTINGS", new Vector2(190, -155), new Vector2(540, 120), Cream, () => ShowSettings(true));
-        ButtonFor(root, "QUIT", new Vector2(190, -300), new Vector2(540, 120), Gold, menu.Quit);
-        Label("MenuHint", safe, Application.isMobilePlatform ? "MOVE + JUMP + FIRE" : "A / D  MOVE     SPACE  JUMP     X  FIRE", 36,
-              new Vector2(0, -490), new Vector2(1250, 60));
-        BuildSettings();
-    }
-    void BuildSettings()
-    {
-        Image card = Box("SettingsCard", safe, Ink);
-        settingsCard = card.gameObject;
-        Place(card.rectTransform, Center, Vector2.zero, new Vector2(1120, 900));
-        Transform root = card.transform;
-        Label("Title", root, "SETTINGS", 72, new Vector2(0, 340), new Vector2(1000, 110)).color = Gold;
-        settingsHealth = Label("Health", root, "", 40, new Vector2(0, 180), new Vector2(600, 80));
-        ButtonFor(root, "HP -", new Vector2(-390, 180), new Vector2(180, 120), Cream, null);
-        ButtonFor(root, "HP +", new Vector2(390, 180), new Vector2(180, 120), Mint, null);
-        settingsRate = Label("Rate", root, "", 40, new Vector2(0, 30), new Vector2(600, 80));
-        ButtonFor(root, "RATE -", new Vector2(-390, 30), new Vector2(180, 120), Cream, null);
-        ButtonFor(root, "RATE +", new Vector2(390, 30), new Vector2(180, 120), Mint, null);
-        Button hazards = ButtonFor(root, "HAZARDS", new Vector2(-250, -135), new Vector2(460, 120), Cream, null);
-        settingsHazards = hazards.GetComponentInChildren<TMP_Text>();
-        Button enemies = ButtonFor(root, "ENEMIES", new Vector2(250, -135), new Vector2(460, 120), Cream, null);
-        settingsEnemies = enemies.GetComponentInChildren<TMP_Text>();
-        ButtonFor(root, "BACK", new Vector2(0, -310), new Vector2(500, 130), Gold, () => ShowSettings(false));
-        RefreshSettings();
-        settingsCard.SetActive(false);
-    }
+    void BuildMenu() { BuildAssignment11Menu(); }
+    void BuildSettings() { BuildAssignment11Settings(); }
     public void ShowSettings(bool visible)
     {
         if (settingsCard == null) return;
@@ -213,17 +174,19 @@ public sealed class MobileGameUI : MonoBehaviour
     {
         switch (command)
         {
-            case UIActionButton.Command.HealthDown: GameSettings.playerMaxHp = Mathf.Max(1, GameSettings.playerMaxHp - 1); break;
-            case UIActionButton.Command.HealthUp: GameSettings.playerMaxHp = Mathf.Min(5, GameSettings.playerMaxHp + 1); break;
-            case UIActionButton.Command.RateDown: GameSettings.fireCooldown = Mathf.Max(0.1f, GameSettings.fireCooldown - 0.1f); break;
-            case UIActionButton.Command.RateUp: GameSettings.fireCooldown = Mathf.Min(1.5f, GameSettings.fireCooldown + 0.1f); break;
+            case UIActionButton.Command.HealthDown: GameSettings.playerMaxHp = Mathf.Max(GameCatalog.Current.defaults.minHp, GameSettings.playerMaxHp - 1); break;
+            case UIActionButton.Command.HealthUp: GameSettings.playerMaxHp = Mathf.Min(GameCatalog.Current.defaults.maxHp, GameSettings.playerMaxHp + 1); break;
+            case UIActionButton.Command.RateDown: GameSettings.fireCooldown = Mathf.Max(GameCatalog.Current.defaults.minFireCooldown, GameSettings.fireCooldown - GameCatalog.Current.defaults.cooldownStep); break;
+            case UIActionButton.Command.RateUp: GameSettings.fireCooldown = Mathf.Min(GameCatalog.Current.defaults.maxFireCooldown, GameSettings.fireCooldown + GameCatalog.Current.defaults.cooldownStep); break;
             case UIActionButton.Command.Hazards: GameSettings.hazardsEnabled = !GameSettings.hazardsEnabled; break;
             case UIActionButton.Command.Enemies: GameSettings.enemiesEnabled = !GameSettings.enemiesEnabled; break;
         }
+        SaveService.Write();
         RefreshSettings();
     }
     void RefreshSettings()
     {
+        RefreshAssignment11Audio();
         if (settingsHealth != null) settingsHealth.text = "HEALTH  " + GameSettings.playerMaxHp;
         if (settingsRate != null) settingsRate.text = "SHOT DELAY  " + GameSettings.fireCooldown.ToString("0.0") + "s";
         if (settingsHazards != null) settingsHazards.text = "HAZARDS  " + (GameSettings.hazardsEnabled ? "ON" : "OFF");
@@ -239,10 +202,10 @@ public sealed class MobileGameUI : MonoBehaviour
         Image card = Box("WinCard", safe, Ink);
         Place(card.rectTransform, Center, Vector2.zero, new Vector2(1000, 640));
         Label("Title", card.transform, "YOU WIN!", 100, new Vector2(0, 180), new Vector2(900, 140)).color = Gold;
-        Label("Hint", card.transform, "All portals cleared. The boss is defeated.", 40,
+        Label("Hint", card.transform, "Score: "+SaveService.Data.runScore+"   Best: "+SaveService.Data.bestScore, 40,
               new Vector2(0, 40), new Vector2(920, 100));
         ButtonFor(card.transform, "PLAY AGAIN", new Vector2(-225, -155), new Vector2(410, 140), Mint,
-                  () => Load(SceneNames.Level1));
+                  RunFlow.NewGame);
         ButtonFor(card.transform, "MAIN MENU", new Vector2(225, -155), new Vector2(410, 140), Gold,
                   () => Load(SceneNames.MainMenu));
     }
@@ -336,6 +299,7 @@ public sealed class MobileGameUI : MonoBehaviour
     public void SetPaused(bool paused)
     {
         if (IsDead || modal == null) return;
+        if(paused) RunFlow.SaveCurrent();
         IsPaused = paused;
         ResetControls();
         modalTitle.text = "PAUSED";
@@ -344,7 +308,8 @@ public sealed class MobileGameUI : MonoBehaviour
         modal.SetActive(paused);
         if (controls != null) controls.SetActive(!paused);
         Time.timeScale = paused ? 0f : 1f;
-        AudioListener.pause = paused;
+        AudioListener.pause = false;
+        SoundPass.Ensure(); SoundPass.Instance.SetPaused(paused);
         EventSystem.current?.SetSelectedGameObject(null);
     }
     public void ShowDeath()
@@ -358,7 +323,8 @@ public sealed class MobileGameUI : MonoBehaviour
         controls.SetActive(false);
         modal.SetActive(true);
         Time.timeScale = 0f;
-        AudioListener.pause = true;
+        AudioListener.pause = false;
+        SoundPass.Ensure(); SoundPass.Instance.SetPaused(true);
     }
     void ResetControls()
     {
@@ -374,6 +340,7 @@ public sealed class MobileGameUI : MonoBehaviour
             for (int i = 0; i < hearts.Length; i++)
                 hearts[i].color = i < health.CurrentHp ? Color.white : new Color(0.35f, 0.4f, 0.4f, 0.5f);
             if (healthLabel != null) healthLabel.text = "HP " + health.CurrentHp + " / " + health.maxHp;
+            if(campaignStatus!=null && DataLevelController.Instance!=null) campaignStatus.text=DataLevelController.Instance.GoalStatus;
         }
         if (player != null && Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
             SetPaused(!IsPaused);
@@ -392,7 +359,7 @@ public sealed class MobileGameUI : MonoBehaviour
         foreach (TMP_Text label in GetComponentsInChildren<TMP_Text>(true))
             if (label.name == "MenuHint") label.text = "Use Home or close the browser tab to exit.";
     }
-    public void Restart() { Load(SceneManager.GetActiveScene().name); }
+    public void Restart() { if(SceneManager.GetActiveScene().name==SceneNames.Campaign) RunFlow.Restart(); else Load(SceneManager.GetActiveScene().name); }
     static void Load(string scene)
     {
         Time.timeScale = 1f;
@@ -476,7 +443,7 @@ public sealed class MobileGameUI : MonoBehaviour
             handler.command = command;
             handler.Bind();
         }
-        else if (action != null) button.onClick.AddListener(action);
+        else if (action != null) button.onClick.AddListener(() => { Sfx.Play(SoundEvent.UIClick); action(); });
         Label("Label", image.transform, text, 42, Vector2.zero, size - new Vector2(20, 10)).color = Ink;
         return button;
     }

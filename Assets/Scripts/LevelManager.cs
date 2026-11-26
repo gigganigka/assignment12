@@ -6,7 +6,7 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance;   // чтобы монетки могли обратиться к менеджеру
 
-    public int coinsRequired = 5;          // сколько нужно собрать, чтобы открылся портал
+    public int coinsRequired;          // сколько нужно собрать, чтобы открылся портал
     public TMP_Text coinText;              // UI-текст "Coins: 0/5"
     public TMP_Text hpText;                // UI-текст "HP: 3"
     public Health player;                  // перетащи Player

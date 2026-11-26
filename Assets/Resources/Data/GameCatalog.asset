@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21b5cb6eaf2d40fabeaa0e462b50e143, type: 3}
+  m_Name: GameCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::GameCatalog
+  player: {fileID: 11400000, guid: 6b3f008b1a6e476f906ec150d86b4322, type: 2}
+  items: {fileID: 11400000, guid: af8282840f934b428bd24b633412a98a, type: 2}
+  defaults: {fileID: 11400000, guid: 27055e32bd5a46a0b1294751cd745a7f, type: 2}
+  boss: {fileID: 11400000, guid: 137fa21e98c7469c827a7e19c0433463, type: 2}
+  enemyStats:
+    - {fileID: 11400000, guid: 65f8191e467747c38d0b21bedff8d8d7, type: 2}
+    - {fileID: 11400000, guid: be81d307635e49afb127f4437ad52579, type: 2}
+    - {fileID: 11400000, guid: 050e549026f944fca893ac944942abf0, type: 2}
+  levels:
+    - {fileID: 11400000, guid: 0645b2713b854191aa25a0c259a310ec, type: 2}
+    - {fileID: 11400000, guid: f423a2a800e24566b1bf8d028c196512, type: 2}
+    - {fileID: 11400000, guid: e58979496f9840898bfebca9352bc226, type: 2}
+  fireballPrefab: {fileID: 3724515901389520773, guid: fd2e2756a7354b8eba02393b67005b28,
+    type: 3}
+  coinSprite: {fileID: 2491587035593152947, guid: 96e5701b4a924deb96f0522f320603bf,
+    type: 3}
+  bossSprite: {fileID: -8941519833378295907, guid: a880a2da1236417dafe584cbe64bc249,
+    type: 3}

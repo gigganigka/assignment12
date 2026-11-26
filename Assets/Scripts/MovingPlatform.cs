@@ -5,14 +5,15 @@ using UnityEngine;
 // На платформе: BoxCollider2D (не триггер), Rigidbody2D (Body Type = Kinematic), слой Ground.
 public class MovingPlatform : MonoBehaviour
 {
-    public Vector2 moveOffset = new Vector2(4f, 0f);   // на сколько уезжает (X, Y)
-    public float speed = 1.5f;
+    public Vector2 moveOffset = Vector2.zero;   // на сколько уезжает (X, Y)
+    public float speed;
 
     Vector3 startPos;
     readonly List<Transform> riders = new List<Transform>(); // кто стоит сверху
 
     void Start()
     {
+        speed=GameCatalog.Current.player.moveSpeed;
         startPos = transform.position;
     }
 

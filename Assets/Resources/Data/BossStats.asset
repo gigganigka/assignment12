@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 303e7ac00e874b67a1111d9d3005c2a1, type: 3}
+  m_Name: BossStats
+  m_EditorClassIdentifier: Assembly-CSharp::BossStats
+  maxHp: 10
+  contactDamage: 1
+  fanCount: 3
+  phaseTwoFanCount: 5
+  rainCount: 3
+  phaseTwoColumns: 2
+  initialDelay: 1.5
+  restTime: 2.5
+  windUp: 0.8
+  spread: 12
+  phaseTwoRestFactor: 0.5
+  phaseTwoSpreadFactor: 1.5
+  phaseTwoHpFraction: 0.5
+  rainWarning: 0.8
+  rainWidth: 1.6
+  rainSpeed: 7
+  rainOffsetFactor: 1.5
+  rainProjectileSpacing: 0.4
+  rainTopPadding: 0.5
+  deathDelay: 1
+  bulletSpeed: 6
+  bulletLifetime: 5
+  bulletDamage: 1
+  rainColumns: 1

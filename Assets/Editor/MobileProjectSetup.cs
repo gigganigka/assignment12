@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 public static class MobileProjectSetup
 {
     static readonly string[] ScenePaths = {
-        "Assets/mainmenu.unity", "Assets/enemy_lab.unity", "Assets/level1.unity", "Assets/level2.unity",
+        "Assets/mainmenu.unity", "Assets/campaign.unity", "Assets/enemy_lab.unity", "Assets/level1.unity", "Assets/level2.unity",
         "Assets/bosslevel.unity", "Assets/win.unity"
     };
 
@@ -38,15 +38,15 @@ public static class MobileProjectSetup
         }
         AssetDatabase.SaveAssets();
         EditorSceneManager.OpenScene(ScenePaths[0]);
-        Debug.Log("COINBOUND: project configured and all five interfaces baked. Open mainmenu and press Play.");
+        Debug.Log("COINBOUND: project configured and interfaces baked. Open mainmenu and press Play.");
     }
     public static void Configure()
     {
         EditorSettings.serializationMode = SerializationMode.ForceText;
         UnityEditor.VersionControlSettings.mode = "Visible Meta Files";
-        PlayerSettings.companyName = "StudentProject";
+        PlayerSettings.companyName = "DarynTalgatov";
         PlayerSettings.productName = MobileGameUI.GameTitle;
-        PlayerSettings.bundleVersion = "0.1.0";
+        PlayerSettings.bundleVersion = "0.2.0";
         PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
         PlayerSettings.allowedAutorotateToPortrait = false;
         PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;

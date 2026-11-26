@@ -11,7 +11,7 @@ public class Collectible : MonoBehaviour
         if (collected || !other.CompareTag("Player")) return;
         collected = true;
         if (LevelManager.Instance != null) LevelManager.Instance.AddCoin();
-        Sfx.Play(pickupSound != null ? pickupSound : GameAudio.Clip("coin"), 0.75f);
+        Sfx.Play(SoundEvent.Pickup);
         Destroy(gameObject);
     }
 }

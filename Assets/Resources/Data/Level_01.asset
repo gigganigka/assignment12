@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec16eef326c4a048953ec249d21d4e7, type: 3}
+  m_Name: Level_01
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  id: 1
+  title: MINT MEADOW
+  playerStart: {x: 1.2, y: 1.0}
+  exit: {x: 42.0, y: 0.8}
+  timeLimit: 150
+  fallY: -5
+  coinsRequired: 5
+  defeatAllEnemies: 0
+  surfaces:
+    - center: {x: 25.5, y: -0.90000004}
+      size: {x: 9.0, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 4.8, y: -0.90000004}
+      size: {x: 9.6, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 14.1, y: 0.90000004}
+      size: {x: 1.8000001, y: 0.6}
+      oneWay: 1
+    - center: {x: 15.3, y: -0.90000004}
+      size: {x: 7.8, y: 1.8000001}
+      oneWay: 0
+    - center: {x: 17.1, y: 1.8000001}
+      size: {x: 1.8000001, y: 0.6}
+      oneWay: 1
+    - center: {x: 37.5, y: -0.90000004}
+      size: {x: 11.400001, y: 1.8000001}
+      oneWay: 0
+  enemies:
+    - kind: 0
+      position: {x: 6.2, y: 0.55}
+      patrolRadius: 1.4
+      stats: {fileID: 11400000, guid: 65f8191e467747c38d0b21bedff8d8d7, type: 2}
+    - kind: 1
+      position: {x: 23.0, y: 0.55}
+      patrolRadius: 0
+      stats: {fileID: 11400000, guid: be81d307635e49afb127f4437ad52579, type: 2}
+    - kind: 2
+      position: {x: 39.0, y: 0.55}
+      patrolRadius: 1.3
+      stats: {fileID: 11400000, guid: 050e549026f944fca893ac944942abf0, type: 2}
+  coins:
+    - {x: 14.1, y: 2.0400002}
+    - {x: 17.1, y: 2.94}
+    - {x: 25.500002, y: 1.14}
+    - {x: 34.800003, y: 0.78000003}
+    - {x: 6.0, y: 0.78000003}
+  hearts:
+    - {x: 28.500002, y: 0.45}
+  hazards:
+    - {x: 25.500002, y: 0.16666667}
+    - {x: 36.300003, y: 0.16666667}
+  hazardSize: {x: 1.2, y: 0.3}
+  hasBoss: 0
+  bossPosition: {x: 28.0, y: 1.5}
+  bossSize: {x: 2.4, y: 3.0}
+  checkpointMin: {x: -2.0, y: -5}
+  checkpointMax: {x: 45.2000005, y: 9.100000099999999}

@@ -11,28 +11,35 @@ using UnityEngine.UI;
 // Наследует Hazard (бьёт при касании) и IDamageable (его бьёт пуля игрока).
 public class Boss : Hazard, IDamageable
 {
-    public int maxHp = 10;                    // по заданию минимум 3 попадания
+    public int maxHp;                    // по заданию минимум 3 попадания
     public GameObject fireballPrefab;
     public Transform firePoint;               // откуда вылетают шары (у "рта" босса)
     public Transform player;                  // перетащи Player
     public Slider hpBar;                      // UI Slider над боссом или на экране
-    public float restTime = 2.5f;             // ПАУЗА между атаками: окно, когда игрок стреляет
-    public float telegraphTime = 0.8f;        // предупреждение перед веером (босс краснеет)
-    public int fireballsPhase1 = 3;           // сколько шаров в веере (1-я фаза)
-    public int fireballsPhase2 = 5;           // во 2-й фазе
-    public float spread = 12f;                // угол между шарами в градусах
+    public float restTime;             // ПАУЗА между атаками: окно, когда игрок стреляет
+    public float telegraphTime;        // предупреждение перед веером (босс краснеет)
+    public int fireballsPhase1;           // сколько шаров в веере (1-я фаза)
+    public int fireballsPhase2;           // во 2-й фазе
+    public float spread;                // угол между шарами в градусах
 
     [Header("Огненный дождь")]
-    public float rainWarningTime = 1f;        // сколько висит красная колонна (успеть отбежать)
-    public float rainWidth = 1.6f;            // ширина колонны в мире
-    public int rainFireballs = 3;             // сколько шаров падает в колонне
-    public float rainSpeed = 7f;
+    public float rainWarningTime;        // сколько висит красная колонна (успеть отбежать)
+    public float rainWidth;            // ширина колонны в мире
+    public int rainFireballs;             // сколько шаров падает в колонне
+    public float rainSpeed;
 
     public AudioClip hitSound;
     public AudioClip deathSound;
     public string winScene = SceneNames.Win;
 
+    public TMP_Text hpLabel;
     int hp;
+    BossStats stats;
+    public int CurrentHp => hp;
+    public void RestoreHealth(int value) { hp=Mathf.Clamp(value,1,maxHp); RefreshHealthLabel(); }
+    void RefreshHealthLabel() { if(hpLabel!=null) hpLabel.text="WARDEN  "+hp+" / "+maxHp; if(hpBar!=null) hpBar.value=hp; }
+    bool Visible => player!=null && Camera.main!=null && OnScreen(transform.position) && OnScreen(player.position);
+    bool OnScreen(Vector3 p) { Vector3 v=Camera.main.WorldToViewportPoint(p); return v.z>0 && v.x>=0 && v.x<=1 && v.y>=0 && v.y<=1; }
     SpriteRenderer sr;
     bool dead;
     Sprite squareSprite;                      // белый квадрат для красной колонны
@@ -42,7 +49,12 @@ public class Boss : Hazard, IDamageable
         respectHazardToggle = false;          // босс не отключается переключателем Fire
         base.Awake();
         sr = GetComponent<SpriteRenderer>();
+        stats=GameCatalog.Current.boss;
+        maxHp=stats.maxHp; damage=stats.contactDamage; restTime=stats.restTime; telegraphTime=stats.windUp;
+        fireballsPhase1=stats.fanCount; fireballsPhase2=stats.phaseTwoFanCount; spread=stats.spread;
+        rainWarningTime=stats.rainWarning; rainWidth=stats.rainWidth; rainFireballs=stats.rainCount; rainSpeed=stats.rainSpeed;
         hp = maxHp;
+        RefreshHealthLabel();
         if (hpBar != null) { hpBar.maxValue = maxHp; hpBar.value = hp; }
 
         // Делаем спрайт-квадрат 1x1 из встроенной белой текстуры (не нужен отдельный файл)
@@ -54,40 +66,44 @@ public class Boss : Hazard, IDamageable
         StartCoroutine(AttackLoop());
     }
 
-    bool Phase2 { get { return hp <= maxHp / 2; } }   // ниже половины HP - вторая фаза
+    bool Phase2 { get { return hp <= maxHp * stats.phaseTwoHpFraction; } }   // ниже половины HP - вторая фаза
 
     IEnumerator AttackLoop()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(stats.initialDelay);
         bool fanTurn = true;                           // атаки идут по очереди: веер, дождь, веер...
         while (!dead)
         {
+            while(!dead && !Visible) yield return null;
+            if(dead) yield break;
             // StartCoroutine внутри корутины: ждём, пока атака закончится
             if (fanTurn) yield return StartCoroutine(FanAttack());
             else yield return StartCoroutine(RainAttack());
             fanTurn = !fanTurn;
 
             // окно для атаки игрока
-            yield return new WaitForSeconds(Phase2 ? restTime * 0.5f : restTime);
+            yield return new WaitForSeconds(Phase2 ? restTime * stats.phaseTwoRestFactor : restTime);
         }
     }
 
     // ---------- Атака 1: веер ----------
     IEnumerator FanAttack()
     {
+        Sfx.Play(SoundEvent.BossFanWindUp);
         sr.color = Color.red;                          // предупреждение: босс краснеет
         yield return new WaitForSeconds(telegraphTime);
         sr.color = Color.white;
-        if (dead) yield break;
+        if (dead || !Visible) yield break;
 
         int count = Phase2 ? fireballsPhase2 : fireballsPhase1;
-        float step = Phase2 ? spread * 1.5f : spread;  // во 2-й фазе веер шире
+        float step = Phase2 ? spread * stats.phaseTwoSpreadFactor : spread;  // во 2-й фазе веер шире
         FireFan(count, step);
     }
 
     void FireFan(int count, float angleStep)
     {
         if (player == null || fireballPrefab == null) return;
+        Sfx.Play(SoundEvent.EnemyShot);
         Vector3 origin = FireOrigin();
 
         // Целимся в ЦЕНТР героя (центр его коллайдера), а не в точку у ног
@@ -112,28 +128,30 @@ public class Boss : Hazard, IDamageable
     {
         if (player == null || fireballPrefab == null) yield break;
 
-        int columns = Phase2 ? 2 : 1;                  // во 2-й фазе две колонны
+        int columns = Phase2 ? stats.phaseTwoColumns : stats.rainColumns;                  // во 2-й фазе две колонны
         float[] xs = new float[columns];
         xs[0] = player.position.x;                     // колонна там, где герой СЕЙЧАС
-        if (columns > 1) xs[1] = player.position.x + (Random.value < 0.5f ? -1f : 1f) * rainWidth * 1.5f;
+        if (columns > 1) xs[1] = player.position.x + (Random.value < 0.5f ? -1f : 1f) * rainWidth * stats.rainOffsetFactor;
 
         // Предупреждение: красная полупрозрачная колонна + "!"
+        Sfx.Play(SoundEvent.BossRainWindUp);
         GameObject[] warnings = new GameObject[columns];
         for (int c = 0; c < columns; c++) warnings[c] = MakeWarning(xs[c]);
 
         yield return new WaitForSeconds(rainWarningTime);   // время, чтобы отбежать
 
         for (int c = 0; c < columns; c++) Destroy(warnings[c]);
-        if (dead) yield break;
+        if (dead || !Visible) yield break;
 
-        float topY = Camera.main.transform.position.y + Camera.main.orthographicSize + 0.5f;
+        Sfx.Play(SoundEvent.EnemyShot);
+        float topY = Camera.main.transform.position.y + Camera.main.orthographicSize + stats.rainTopPadding;
         for (int c = 0; c < columns; c++)
         {
             for (int i = 0; i < rainFireballs; i++)
             {
                 // шары равномерно по ширине колонны
                 float x = xs[c] - rainWidth / 2f + rainWidth * (i + 0.5f) / rainFireballs;
-                SpawnFireball(new Vector3(x, topY + i * 0.4f, 0f), Vector2.down, rainSpeed);
+                SpawnFireball(new Vector3(x, topY + i * stats.rainProjectileSpacing, 0f), Vector2.down, rainSpeed);
             }
         }
     }
@@ -174,6 +192,8 @@ public class Boss : Hazard, IDamageable
     void SpawnFireball(Vector3 pos, Vector2 dir, float speedOverride)
     {
         GameObject f = Instantiate(fireballPrefab, pos, Quaternion.identity);
+        SpriteRenderer fireVisual=f.GetComponent<SpriteRenderer>();
+        if(fireVisual!=null) fireVisual.sharedMaterial=sr.sharedMaterial;
         Projectile p = f.GetComponent<Projectile>();
         if (speedOverride > 0f) p.speed = speedOverride;
         p.Launch(dir);
@@ -182,9 +202,10 @@ public class Boss : Hazard, IDamageable
     // Сюда приходит урон от PlayerBullet (через интерфейс IDamageable)
     public void TakeHit(int damage)
     {
-        if (dead) return;
-        hp -= damage;
-        Sfx.Play(hitSound);
+        if (dead || damage<=0) return;
+        hp = Mathf.Max(0,hp-damage);
+        RefreshHealthLabel();
+        Sfx.Play(SoundEvent.EnemyHit);
         if (hpBar != null) hpBar.value = hp;
         if (hp <= 0) StartCoroutine(Die());
     }
@@ -192,13 +213,14 @@ public class Boss : Hazard, IDamageable
     IEnumerator Die()
     {
         dead = true;
-        Sfx.Play(deathSound);
+        Sfx.Play(SoundEvent.EnemyDeath);
         sr.enabled = false;
         GetComponent<Collider2D>().enabled = false;
         if (hpBar != null) hpBar.gameObject.SetActive(false);
         // убираем шары, которые ещё летят, чтобы герой не умер после победы
         foreach (Fireball f in FindObjectsByType<Fireball>(FindObjectsSortMode.None)) Destroy(f.gameObject);
-        yield return new WaitForSeconds(1f);
-        GameScenes.Load(winScene);                        // босс побеждён -> экран победы
+        yield return new WaitForSeconds(stats.deathDelay);
+        if(DataLevelController.Instance!=null) Destroy(gameObject);
+        else GameScenes.Load(winScene);                        // босс побеждён -> экран победы
     }
 }

@@ -5,9 +5,9 @@ PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 28
   productGUID: 699f378533654b46b9485dd7100b6a34
-  companyName: StudentProject
+  companyName: DarynTalgatov
   productName: COINBOUND
-  bundleVersion: 0.1.0
+  bundleVersion: 0.2.0
   defaultScreenWidth: 1920
   defaultScreenHeight: 1080
   defaultScreenOrientation: 4

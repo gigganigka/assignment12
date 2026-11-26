@@ -2,6 +2,7 @@
 // Имя должно совпадать с именем файла сцены (без .unity) и стоять в Build Profiles.
 public static class SceneNames
 {
+    public const string Campaign = "campaign";
     public const string MainMenu = "mainmenu";   // файл сцены: Assets/mainmenu.unity
     public const string EnemyLab = "enemy_lab";
     public const string Level1 = "level1";

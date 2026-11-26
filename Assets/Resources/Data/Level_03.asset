@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ec16eef326c4a048953ec249d21d4e7, type: 3}
+  m_Name: Level_03
+  m_EditorClassIdentifier: Assembly-CSharp::LevelData
+  id: 3
+  title: EMBER KEEP
+  playerStart: {x: 1.2, y: 1.0}
+  exit: {x: 32.0, y: 0.8}
+  timeLimit: 210
+  fallY: -5
+  coinsRequired: 5
+  defeatAllEnemies: 1
+  surfaces:
+    - center: {x: 17.0, y: -0.9}
+      size: {x: 34.0, y: 1.8}
+      oneWay: 0
+    - center: {x: 9.0, y: 1.2}
+      size: {x: 1.8, y: 0.6}
+      oneWay: 1
+    - center: {x: 17.0, y: 1.8}
+      size: {x: 1.8, y: 0.6}
+      oneWay: 1
+  enemies:
+    - kind: 0
+      position: {x: 6.0, y: 0.55}
+      patrolRadius: 1.2
+      stats: {fileID: 11400000, guid: 65f8191e467747c38d0b21bedff8d8d7, type: 2}
+    - kind: 1
+      position: {x: 15.0, y: 0.55}
+      patrolRadius: 0
+      stats: {fileID: 11400000, guid: be81d307635e49afb127f4437ad52579, type: 2}
+    - kind: 2
+      position: {x: 22.0, y: 0.55}
+      patrolRadius: 1.2
+      stats: {fileID: 11400000, guid: 050e549026f944fca893ac944942abf0, type: 2}
+  coins:
+    - {x: 5.0, y: 1.0}
+    - {x: 9.0, y: 2.2}
+    - {x: 17.0, y: 2.8}
+    - {x: 23.0, y: 1.0}
+    - {x: 31.0, y: 1.0}
+  hearts:
+    - {x: 19.0, y: 0.7}
+  hazards:
+    - {x: 13.0, y: 0.16}
+  hazardSize: {x: 1.2, y: 0.3}
+  hasBoss: 1
+  bossPosition: {x: 28.0, y: 1.5}
+  bossSize: {x: 2.4, y: 3.0}
+  checkpointMin: {x: -2.0, y: -5}
+  checkpointMax: {x: 36.0, y: 9.1}
